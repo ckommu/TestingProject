@@ -78,7 +78,7 @@ public class HotelTest {
     @Test
     @Ignore
     @Parameters({"tokyo four seasons"})
-    public void connectionTest2(String city) {
+    public void connectionTest2(String city) throws Exception{
         driver.get("https://www.booking.com/");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -96,7 +96,11 @@ public class HotelTest {
 
         WebElement cityInput = driver.findElement(By.cssSelector("input[placeholder='Where are you going?']"));
         cityInput.sendKeys(city);
+        Thread.sleep(2000);
         cityInput.sendKeys(Keys.DOWN);
+        Thread.sleep(2000);
+        cityInput.sendKeys(Keys.ENTER);
+        Thread.sleep(1000);
         cityInput.sendKeys(Keys.ENTER);
 
 
