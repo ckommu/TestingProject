@@ -3,12 +3,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import junitparams.Parameters;
 import junitparams.JUnitParamsRunner;
 import java.time.Duration;
+import java.util.List;
 
 @RunWith(JUnitParamsRunner.class)
 public class HotelTest {
@@ -17,9 +20,8 @@ public class HotelTest {
     @BeforeClass
     public static void setUp() {
         System.setProperty("webdriver.gecko.driver", "geckodriver");
-        //System.setProperty("webdriver.chromedriver", "chromedriver");
+        //System.setProperty("webdriver.chrome.driver", "chromedriver");
         driver = new FirefoxDriver();
-        //driver.manage().window().setSize(new Dimension(831, 1011));
     }
 
     @Test
@@ -37,7 +39,6 @@ public class HotelTest {
         cityInput.sendKeys(city);
 
         // selecting "Tokyo" from drop down
-        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         WebElement citySelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#\\32 1033_city_Tokyo-Japan > div")));
         citySelect.click();
 
@@ -48,14 +49,21 @@ public class HotelTest {
         firstDateSelect.click();
 
         // selecting departure
-        WebElement secondDate = driver.findElement(By.xpath("/html/body/div[2]/div/div/div/main/div[1]/div/div[2]/div/div/div/div/div[2]/div[2]/div/div/div/div[3]/div/div/span"));
-        secondDate.click();
-        WebElement secondDateSelect = driver.findElement(By.xpath("/html/body/div[6]/div/div[2]/div[1]/div/div/div/div[3]/table/tbody/tr[1]/td[5]/div"));
+        WebElement secondDateSelect = driver.findElement(By.xpath("/html/body/div[7]/div/div[2]/div[1]/div/div[1]/div/div[3]/table/tbody/tr[1]/td[5]/div"));
         secondDateSelect.click();
 
+        // resizing window bc on firefox, a popup obscures the search button and makes it unclickable
+        // i've TRIED to get rid of the pop-up but NOTHINGNGIFJOWEJ was working
+        // resizing the window pushes the button to the bottom where it's visible (for me anyway)
+        driver.manage().window().setSize(new Dimension(831, 1011));
+
+        // clicking apply for # of guests & rooms
+        WebElement guestApply = driver.findElement(By.xpath("/html/body/div[7]/div/div[2]/div/div/div[1]/div/span/button/div/div"));
+        guestApply.click();
+
         // selecting search button
-        //driver.manage().window().setSize(new Dimension(831, 1011));
-        WebElement search = driver.findElement(By.xpath("/html/body/div[2]/div/div/div/main/div[1]/div/div[2]/div/div/div/div/div[2]/span/span/button/div/div/div/div/svg/path"));
+        // THIS DOES NOT WORK
+        WebElement search = driver.findElement(By.tagName("button"));
         search.click();
     }
 
