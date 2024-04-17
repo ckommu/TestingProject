@@ -28,10 +28,9 @@ public class HotelTest {
     @Parameters({"tokyo"})
     public void connectionTest(String city) {
         driver.get("https://www.kayak.com/");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
 
         // clicking the Stays tab
-        WebElement stays = driver.findElement(By.cssSelector("div.pRB0-nav-items:nth-child(3) > nav:nth-child(1) > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)"));
+        WebElement stays = driver.findElement(By.cssSelector("div.pRB0-nav-items:nth-child(3) > nav:nth-child(1) > ul:nth-child(1) > li:nth-child(2)"));
         stays.click();
 
         // inputting "Tokyo"
@@ -39,6 +38,7 @@ public class HotelTest {
         cityInput.sendKeys(city);
 
         // selecting "Tokyo" from drop down
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         WebElement citySelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#\\32 1033_city_Tokyo-Japan > div")));
         citySelect.click();
 
@@ -52,6 +52,10 @@ public class HotelTest {
         WebElement secondDateSelect = driver.findElement(By.xpath("/html/body/div[7]/div/div[2]/div[1]/div/div[1]/div/div[3]/table/tbody/tr[1]/td[5]/div"));
         secondDateSelect.click();
 
+        // unchecking Compare vs. KAYAK box
+        WebElement compare = driver.findElement(By.id("BDC-PRE_US_HFDCMP2"));
+        compare.click();
+
         // resizing window bc on firefox, a popup obscures the search button and makes it unclickable
         // i've TRIED to get rid of the pop-up but NOTHINGNGIFJOWEJ was working
         // resizing the window pushes the button to the bottom where it's visible (for me anyway)
@@ -63,7 +67,11 @@ public class HotelTest {
 
         // selecting search button
         // THIS DOES NOT WORK
-        WebElement search = driver.findElement(By.tagName("button"));
+        //WebElement search = driver.findElement(By.tagName("button"));
+        //WebElement search = driver.findElement(By.cssSelector("button[aria-label='Search']"));
+        //search.click();
+        WebDriverWait searchWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement search = searchWait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[2]/div/div/div/main/div[1]/div/div[2]/div/div/div/div/div[2]/span/span")));
         search.click();
     }
 
