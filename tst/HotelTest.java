@@ -1,4 +1,5 @@
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
@@ -27,7 +28,7 @@ public class HotelTest {
     @Test
     @Parameters({"tokyo"})
     public void connectionTest(String city) {
-        driver.get("https://www.kayak.com/");
+        driver.get("https://www.booking.com/");
 
         // clicking the Stays tab
         WebElement stays = driver.findElement(By.cssSelector("div.pRB0-nav-items:nth-child(3) > nav:nth-child(1) > ul:nth-child(1) > li:nth-child(2)"));
@@ -73,6 +74,38 @@ public class HotelTest {
         WebDriverWait searchWait = new WebDriverWait(driver, Duration.ofSeconds(5));
         WebElement search = searchWait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[2]/div/div/div/main/div[1]/div/div[2]/div/div/div/div/div[2]/span/span")));
         search.click();
+    }
+    @Test
+    @Ignore
+    @Parameters({"tokyo four seasons"})
+    public void connectionTest2(String city) {
+        driver.get("https://www.booking.com/");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement closeSignIn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[21]/div/div/div/div[1]/div[1]/div/button")));
+        closeSignIn.click();
+
+        WebElement openDateMenu = driver.findElement(By.xpath("/html/body/div[3]/div[2]/div/form/div[1]/div[2]/div"));
+        openDateMenu.click();
+
+        WebElement startDate = driver.findElement(By.cssSelector("span[data-date='2024-05-01']"));
+        startDate.click();
+
+        WebElement endDate = driver.findElement(By.cssSelector("span[data-date='2024-05-02']"));
+        endDate.click();
+
+        WebElement cityInput = driver.findElement(By.cssSelector("input[placeholder='Where are you going?']"));
+        cityInput.sendKeys(city);
+        cityInput.sendKeys(Keys.DOWN);
+        cityInput.sendKeys(Keys.ENTER);
+
+
+//        //input[value='Las Vegas']
+//        WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(15));
+//        WebElement searchField = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[placeholder='Where are you going?']")));
+//        searchField.clear();
+//        searchField.sendKeys(city);
+//        searchField.sendKeys(Keys.ENTER);
     }
 
 }
