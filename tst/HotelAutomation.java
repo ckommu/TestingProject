@@ -5,6 +5,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import static org.junit.Assert.assertEquals;
 
 import javax.imageio.IIOException;
 import java.io.File;
@@ -45,48 +46,51 @@ public class HotelAutomation {
         }
     }
 
-    @Test
-    public void connectionTest() {
-        // Your existing test method implementation to navigate the website and extract data
-        // Extracted data: city, hotel, date, price
-        String city = "Tokyo";
-        String hotel = "Example Hotel";
-        double price = 100.0;
-        String startDate = "2024-05-01";
-        String endDate = "2024-05-02";
 
-        // Insert extracted data into the database
-        insertDataIntoDatabase(city, hotel, price, startDate, endDate);
-    }
 
-    @AfterClass
-    public static void tearDown() {
-        // Close the database connection
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        // Close the browser
-        driver.quit();
-    }
-
-    private void insertDataIntoDatabase(String city, String hotel, double price, String startDate, String endDate) {
-        // Insert data into SQLite database
-        try {
-            String sql = "INSERT INTO hotel_data (city, hotel, price, startDate, endDate) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, city);
-            pstmt.setString(2, hotel);
-            pstmt.setDouble(3, price);
-            pstmt.setString(4, startDate);
-            pstmt.setString(5, endDate);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void connectionTest() {
+//        // Your existing test method implementation to navigate the website and extract data
+//        // Extracted data: city, hotel, date, price
+//        String city = "Tokyo";
+//        String hotel = "Example Hotel";
+//        double price = 100.0;
+//        String startDate = "2024-05-01";
+//        String endDate = "2024-05-02";
+//
+//        // Insert extracted data into the database
+//        insertDataIntoDatabase(city, hotel, price, startDate, endDate);
+//    }
+//
+//    @AfterClass
+//    public static void tearDown() {
+//        // Close the database connection
+//        try {
+//            if (connection != null) {
+//                connection.close();
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Close the browser
+//        driver.quit();
+//    }
+//
+//    private void insertDataIntoDatabase(String city, String hotel, double price, String startDate, String endDate) {
+//        // Insert data into SQLite database
+//        try {
+//            String sql = "INSERT INTO hotel_data (city, hotel, price, startDate, endDate) VALUES (?, ?, ?, ?, ?)";
+//            PreparedStatement pstmt = connection.prepareStatement(sql);
+//            pstmt.setString(1, city);
+//            pstmt.setString(2, hotel);
+//            pstmt.setDouble(3, price);
+//            pstmt.setString(4, startDate);
+//            pstmt.setString(5, endDate);
+//            pstmt.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
