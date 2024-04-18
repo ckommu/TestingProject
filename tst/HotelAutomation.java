@@ -5,6 +5,10 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import javax.imageio.IIOException;
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +23,24 @@ public class HotelAutomation {
 //        System.setProperty("webdriver.gecko.driver", "geckodriver");
         driver = new FirefoxDriver();
 
-        // Connect to the SQLite database
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:HotelTesting.db");
-        } catch (SQLException e) {
+            File dbFile = new File("hotel_data.db");
+            if (!dbFile.exists()) {
+                dbFile.createNewFile();
+            }
+            connection = DriverManager.getConnection("jdbc:sqlite:hotel_data.db");
+            Statement statement = connection.createStatement();
+            String createDB = "CREATE TABLE IF NOT EXISTS hotel_data (" +
+                    "id INTEGER PRIMARY KEY," +
+                    "city TEXT," +
+                    "hotel TEXT," +
+                    "price REAL," +
+                    "startDate TEXT," +
+                    "endDate TEXT" +
+                    ")";
+            statement.executeUpdate(createDB);
+
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -33,11 +51,12 @@ public class HotelAutomation {
         // Extracted data: city, hotel, date, price
         String city = "Tokyo";
         String hotel = "Example Hotel";
-        String date = "2024-05-01";
         double price = 100.0;
+        String startDate = "2024-05-01";
+        String endDate = "2024-05-02";
 
         // Insert extracted data into the database
-        insertDataIntoDatabase(city, hotel, date, price);
+        insertDataIntoDatabase(city, hotel, price, startDate, endDate);
     }
 
     @AfterClass
@@ -55,15 +74,16 @@ public class HotelAutomation {
         driver.quit();
     }
 
-    private void insertDataIntoDatabase(String city, String hotel, String date, double price) {
+    private void insertDataIntoDatabase(String city, String hotel, double price, String startDate, String endDate) {
         // Insert data into SQLite database
         try {
-            String sql = "INSERT INTO hotel_prices (city, hotel, date, price) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO hotel_data (city, hotel, price, startDate, endDate) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, city);
             pstmt.setString(2, hotel);
-            pstmt.setString(3, date);
-            pstmt.setDouble(4, price);
+            pstmt.setDouble(3, price);
+            pstmt.setString(4, startDate);
+            pstmt.setString(5, endDate);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

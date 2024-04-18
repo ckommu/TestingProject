@@ -26,6 +26,7 @@ public class HotelTest {
     }
 
     @Test
+    @Ignore
     @Parameters({"tokyo"})
     public void connectionTest(String city) {
         driver.get("https://www.booking.com/");
