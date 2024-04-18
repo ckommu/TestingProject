@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import junitparams.Parameters;
 import junitparams.JUnitParamsRunner;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 @RunWith(JUnitParamsRunner.class)
@@ -110,6 +112,111 @@ public class HotelTest {
 //        searchField.clear();
 //        searchField.sendKeys(city);
 //        searchField.sendKeys(Keys.ENTER);
+    }
+
+    //FINAL TEST
+    @Test
+    @Parameters({"tokyo hilton"})
+    public void searchHotel(String city) throws Exception{
+        driver.get("https://www.booking.com/");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebElement closeSignIn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[21]/div/div/div/div[1]/div[1]/div/button")));
+        closeSignIn.click();
+
+        WebElement openDateMenu = driver.findElement(By.xpath("/html/body/div[3]/div[2]/div/form/div[1]/div[2]/div"));
+        openDateMenu.click();
+
+        WebElement startDate = driver.findElement(By.cssSelector("span[data-date='2024-05-01']"));
+        startDate.click();
+
+        WebElement endDate = driver.findElement(By.cssSelector("span[data-date='2024-05-02']"));
+        endDate.click();
+
+        String startDateText = "2024-05-01";
+        String endDateText = "2024-05-02";
+
+        WebElement cityInput = driver.findElement(By.cssSelector("input[placeholder='Where are you going?']"));
+        cityInput.sendKeys(city);
+        Thread.sleep(2000);
+        cityInput.sendKeys(Keys.DOWN);
+        Thread.sleep(2000);
+        cityInput.sendKeys(Keys.ENTER);
+        Thread.sleep(1000);
+        cityInput.sendKeys(Keys.ENTER);
+
+        Thread.sleep(2000);
+        WebElement hotelNameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[data-testid='title']")));
+        WebElement priceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span[data-testid='price-and-discounted-price']")));
+
+        // Get the text content of the hotel name and price elements
+        String hotelName = hotelNameElement.getText();
+        String priceText = priceElement.getText();
+
+        // Extract the price as a double value
+        double price = Double.parseDouble(priceText.replaceAll("[^0-9.]", ""));
+
+        // Output the hotel name and price
+        System.out.println("Hotel Name: " + hotelName);
+        System.out.println("Price: $" + price);
+        System.out.println("Start Date: " + startDateText);
+        System.out.println("End Date: " + endDateText);
+        System.out.println();
+
+        LocalDate startDateObj = LocalDate.of(2024, Month.MAY, 2);
+        LocalDate endDateObj = LocalDate.of(2024, Month.MAY, 3);
+
+        int currentMonth = startDateObj.getMonthValue();
+
+        Thread.sleep(500);
+        while (!(startDateObj.getYear() == 2025 && startDateObj.getMonthValue() == Month.JULY.getValue())) {
+
+            Thread.sleep(1000);
+            WebElement openDateMenu2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"bodyconstraint-inner\"]/div[2]/div/div[1]/div/form/div[1]/div[2]/div")));
+            openDateMenu2.click();
+
+            if (startDateObj.getMonthValue() != currentMonth && !(startDateObj.getYear() == 2025 && startDateObj.getMonthValue() == 6)) {
+                // Click on the arrow
+                Thread.sleep(500);
+                WebElement nextMonthArrow = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@aria-label='Next month']")));
+                nextMonthArrow.click();
+
+                currentMonth = startDateObj.getMonthValue();
+            }
+
+            Thread.sleep(500);
+            startDate = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span[data-date='" + startDateObj.toString() + "']")));
+            //startDate = driver.findElement(By.cssSelector("span[data-date='" + startDateObj.toString() + "']"));
+            startDate.click();
+
+            Thread.sleep(500);
+            endDate = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span[data-date='" + endDateObj.toString() + "']")));
+            //endDate = driver.findElement(By.cssSelector("span[data-date='" + endDateObj.toString() + "']"));
+            endDate.click();
+
+            Thread.sleep(500);
+            WebElement searchButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(., 'Search')]")));
+            //WebElement searchButton = driver.findElement(By.xpath("//button[contains(., 'Search')]"));
+            searchButton.click();
+
+            Thread.sleep(1000);
+            hotelNameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[data-testid='title']")));
+            priceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span[data-testid='price-and-discounted-price']")));
+
+            hotelName = hotelNameElement.getText();
+            priceText = priceElement.getText();
+            price = Double.parseDouble(priceText.replaceAll("[^0-9.]", ""));
+
+            System.out.println("Hotel Name: " + hotelName);
+            System.out.println("Price: $" + price);
+            System.out.println("Start Date: " + startDateObj.toString());
+            System.out.println("End Date: " + endDateObj.toString());
+            System.out.println();
+
+            startDateObj = startDateObj.plusDays(1);
+            endDateObj = endDateObj.plusDays(1);
+
+        }
     }
 
 }
